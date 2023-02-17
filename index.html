@@ -1,40 +1,247 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" />
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Theme used for syntax highlighted code -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@highlightjs/cdn-assets@11.7.0/styles/a11y-dark.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>/** JSDoc by example */</h1>
+          <figure>
+            <img src="img/code_quality.png" />
+            <footnote><a href="https://xkcd.com/1513/">xkcd</a></footnote>
+          </figure>
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+          <p>Rosie C</p>
+        </section>
+        <section>
+          <h2>About me</h2>
+          <ul>
+            <li>
+              Professional background in schools outreach and access to higher
+              education
+            </li>
+            <li>Retrained as a developer starting ~2 years ago</li>
+            <li>
+              Joined the STA last year via an Open University skills bootcamp
+            </li>
+          </ul>
+        </section>
+        <section>
+          <section>
+            <h2>What's JSDoc, and why do I care?</h2>
+            <figure>
+              <blockquote>
+                JSDoc 3 is an API documentation generator for JavaScript,
+                similar to Javadoc or phpDocumentor. You add documentation
+                comments directly to your source code, right alongside the code
+                itself. The JSDoc tool will scan your source code and generate
+                an HTML documentation website for you.
+              </blockquote>
+              <figcaption>
+                <a href="https://jsdoc.app/about-getting-started.html"
+                  >JSDoc: Getting Started</a
+                >
+              </figcaption>
+            </figure>
+          </section>
+          <section>
+            <h2>But I don't use JavaScript...</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Java</td>
+                  <td>Javadoc</td>
+                </tr>
+                <tr>
+                  <td>Python</td>
+                  <td>pydoc</td>
+                </tr>
+                <tr>
+                  <td>PHP</td>
+                  <td>phpDocumentor</td>
+                </tr>
+                <tr>
+                  <td>C++</td>
+                  <td>Doxygen</td>
+                </tr>
+                <tr>
+                  <td>Rust</td>
+                  <td>rustdoc</td>
+                </tr>
+                <tr>
+                  <td>...</td>
+                  <td>...</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+        <section>
+          <h2>Why?</h2>
+          <ul>
+            <li>We should be commenting/documenting our code anyway!</li>
+            <li>JSDoc gives us some guidelines for things to include</li>
+            <li>Make life easier for the reader/user of the code</li>
+            <li>
+              Type hints (see also Joe's talk about TypeScript from last week)
+            </li>
+            <li>Nicely formatted HTML docs</li>
+            <li>Integration with other tools, e.g. ESLint</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Comments in JavaScript/TypeScript</h2>
+          <pre><code>/* this is a
+(non-JSDoc)
+multi-line
+comment */
+						
+/**
+This is a JSDoc comment
+*/
+						
+/***
+This is a non-JSDoc comment
+*/
+</code></pre>
+        </section>
+        <section>
+          <h2>Example 1</h2>
+          <pre><code>exports.chunk = function (array, chunkSize) {
+  const chunked = [];
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunked.push(array.slice(i, i + chunkSize));
+  }
+
+  return chunked;
+};</code></pre>
+          <a
+            href="https://github.com/Scottish-Tech-Army/Volunteer-app/blob/98541f408f86d3a41a790886007b0aa311f576a8/api/helpers/arrays.js"
+            >Source: Volunteer App API</a
+          >
+        </section>
+        <section>
+          <h2>Example 2</h2>
+          <pre><code>// AirTable doesn't include fields that it sees as empty
+// (including its equivalent of boolean false)
+// so we need to populate them
+function addEmptyFields(record, fieldDefinitions) {
+  for (const [fieldName, fieldProperties]
+	       of Object.entries(fieldDefinitions)) {
+    if (!record[fieldName]) {
+      switch (fieldProperties.type) {
+        case 'array':
+          record[fieldName] = [];
+          break;
+        case 'boolean':
+          record[fieldName] = false;
+          break;
+        case 'number':
+          record[fieldName] = 0;
+          break;
+        case 'string':
+          record[fieldName] = '';
+          break;
+      }
+    }
+  }
+
+  return record;
+}
+					</code></pre>
+          <a
+            href="https://github.com/Scottish-Tech-Army/Volunteer-app/blob/98541f408f86d3a41a790886007b0aa311f576a8/api/helpers/airTable.js"
+            >Source: Volunteer App API</a
+          >
+        </section>
+        <section>
+          <h2>Generating HTML documentation</h2>
+          <p>Install Node.js (see Dougie's talk from 2 weeks ago), then:</p>
+          <code>npm install jsdoc --save-dev</code>
+          <ul style="list-style-type: none">
+            <li><code>npx jsdoc filename.js</code></li>
+            <li><code>npx jsdoc folder-name -r</code></li>
+          </ul>
+        </section>
+        <section>
+          <h2>ESLint</h2>
+          <figure>
+            <blockquote>
+              ESLint is a tool for identifying and reporting on patterns found
+              in ECMAScript/JavaScript code, with the goal of making code more
+              consistent and avoiding bugs.
+            </blockquote>
+            <figcaption>
+              <a href="https://eslint.org/docs/latest/use/getting-started"
+                >ESLint: Getting started</a
+              >
+            </figcaption>
+          </figure>
+        </section>
+        <section>
+          <h2>ESLint Plugin for JSDoc</h2>
+          <p>
+            Extend ESLint's ruleset with JSDoc-specific rules:
+            <a href="https://www.npmjs.com/package/eslint-plugin-jsdoc"
+              >eslint-plugin-jsdoc on NPM</a
+            >
+          </p>
+          <p><code>npm install --save-dev eslint-plugin-jsdoc</code></p>
+
+          <p>Edit your ESLint config file as shown in the docs on NPM</p>
+        </section>
+        <section>
+          <h2>Resources</h2>
+          <ul>
+            <li><a href="https://www.jsdoc.app">JSDoc website</a></li>
+            <li>
+              <a href="https://code.visualstudio.com/docs/languages/javascript"
+                >JavaScript features in Visual Studio Code</a
+              >
+            </li>
+            <li><a href="https://www.eslint.org">ESLint website</a></li>
+          </ul>
+        </section>
+        <section>
+          <p>Thank you!</p>
+          <p>Any questions?</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
 </html>
